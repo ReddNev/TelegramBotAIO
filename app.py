@@ -1,24 +1,26 @@
 import logging
 from aiogram import Bot, Dispatcher, executor, types
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 import config as cnf
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from database import get_user_by_id, insert_new_user
+
 
 storage = MemoryStorage()
 bot = Bot(cnf.TOKEN)
-# Диспетчер для бота
 dp = Dispatcher(bot, storage=storage)
-# Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
 
 
-@dp.message_handler(commands=['start', 'help'])
-async def start_or_help(message: types.Message):
-    ''' Response to command /help and /start '''
-
-    text = 'Hi, i am a bot helper'
-
-    await message.answer(text)
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    ''' Response to command start '''
+    chat_id = message.from_user.id
+    user_info = get_user_by_id(_id=chat_id)
+    if user_info:
+        await message.answer("Bot is ready to go")
+    else:
+        insert_new_user(chat_id=chat_id)
+        await message.answer("User added to the system")
 
 
 @dp.message_handler(commands=['button'])

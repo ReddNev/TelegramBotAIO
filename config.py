@@ -5,7 +5,4 @@ load_dotenv()
 TOKEN = os.getenv('TOKEN')
 NAME = 'MyMoneyBot'
 
-host = os.getenv('HOST')
-user = os.getenv('USER')
-password = os.getenv('PASSWORD')
-db_name = os.getenv('DB_NAME')
+DATABASE_PATH = os.getenv('DATABASE_PATH')

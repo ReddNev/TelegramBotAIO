@@ -1,16 +1,24 @@
-import psycopg2
-from config import host, user, password, db_name
+import psycopg2.extras
+from config import DATABASE_PATH
 
+
+con = None
 try:
-    connection = psycopg2.connect(
-        host=host,
-        user=user,
-        password=password,
-        database=db_name
-    )
+    con = psycopg2.connect(DATABASE_PATH)
+    with con.cursor() as cur:
+        cur.execute('SELECT version()')
+        print(f'SERVER version: {cur.fetchone()}')
+
+    with con.cursor() as cur:
+        cur.execute(
+            """CREATE TABLE IF NOT EXISTS users(
+            id serial PRIMARY KEY,
+            username varchar(20) NOT NULL,
+            chat_id varchar(200) NOT NULL,
+            is_admin boolean);"""
+        )
 except Exception as _ex:
-    print('[INFO] Error while working PostgeSQL', _ex)
+    raise _ex
 finally:
-    if connection:
-        connection.close()
-        print('[INFO] PostgeSQL connection closed')
+    con.commit()
+
