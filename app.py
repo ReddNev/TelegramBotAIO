@@ -2,7 +2,7 @@ import logging
 from aiogram import Bot, Dispatcher, executor, types
 import config as cnf
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from database import get_user_by_id, insert_new_user
+from database.database import get_user_by_id, insert_new_user
 
 
 storage = MemoryStorage()
@@ -15,11 +15,12 @@ logging.basicConfig(level=logging.INFO)
 async def start(message: types.Message):
     ''' Response to command start '''
     chat_id = message.from_user.id
+    username = message.from_user.username
     user_info = get_user_by_id(_id=chat_id)
     if user_info:
         await message.answer("Bot is ready to go")
     else:
-        insert_new_user(chat_id=chat_id)
+        insert_new_user(chat_id=chat_id, username=username)
         await message.answer("User added to the system")
 
 
