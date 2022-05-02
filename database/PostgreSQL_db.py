@@ -12,9 +12,9 @@ try:
     with con.cursor() as cur:
         cur.execute(
             """CREATE TABLE IF NOT EXISTS users(
-            id integer PRIMARY KEY,
-            username varchar(20) NOT NULL,
-            is_admin boolean NOT NULL DEFAULT false);"""
+            id INTEGER PRIMARY KEY,
+            username VARCHAR(20) NOT NULL,
+            is_admin BOOLEAN NOT NULL DEFAULT false);"""
         )
 except Exception as _ex:
     raise _ex
