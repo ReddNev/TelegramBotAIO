@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 
 btn_main = KeyboardButton('Главное меню')
 
@@ -16,3 +16,4 @@ info_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_well, btn_test1, b
 btn_check = KeyboardButton('Остаток на счете')
 btn_money = KeyboardButton('Потрачено денег')
 purse_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_check, btn_money, btn_main)
+
