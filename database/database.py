@@ -18,3 +18,13 @@ def insert_new_user(chat_id, username):
     con.commit()
     return True
 
+
+def get_addres_by_id(_id: int):
+    try:
+        sql = f"SELECT address FROM wallets_model WHERE user_id = {_id}"
+        con = psycopg2.connect(cnf.DATABASE_PATH)
+        cur = con.cursor()
+        cur.execute(sql)
+        return cur.fetchone()
+    except Exception as error:
+        return ("TJDENsfBJs4RFETt1X1W8wMDc8M5XnJhCe", )

@@ -1,12 +1,12 @@
 import logging
 from aiogram import executor
 from create_bot import dp
-from handlers import client
+from handlers import user
 
 logging.basicConfig(level=logging.INFO)
 
 """ Function launch """
-client.register_handlers_client(dp)
+user.register_handlers_client(dp)
 
 
 if __name__ == "__main__":
