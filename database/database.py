@@ -19,7 +19,7 @@ def insert_new_user(chat_id, username):
     return True
 
 
-def get_addres_by_id(_id: int):
+def get_address_by_id(_id: int):
     try:
         sql = f"SELECT address FROM wallets_model WHERE user_id = {_id}"
         con = psycopg2.connect(cnf.DATABASE_PATH)

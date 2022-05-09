@@ -1,13 +1,15 @@
 import typing
+import pyqrcode as pq
 
 from aiogram import types, Dispatcher
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from create_bot import bot
+from create_bot import bot, dp
 from database.database import get_user_by_id, insert_new_user, get_addres_by_id
 
 from services.client import Client
 from config import WALLETS, WALLETS_COMMAND, logger
+from utils.utils import get_qr_code, delete_qr_code
 
 
 async def start(message: types.Message):
@@ -16,14 +18,14 @@ async def start(message: types.Message):
     username = message.from_user.username
     user_info = get_user_by_id(_id=chat_id)
     if user_info:
-        await message.answer("Bot is ready to go")
+        await message.answer('Bot is ready to go')
     else:
         insert_new_user(chat_id=chat_id, username=username)
-        await message.answer("User added to the system")
+        await message.answer('User added to the system')
 
 
 async def get_wallets(message: typing.Union[types.CallbackQuery, types.Message]):
-    logger.info("get_wallets command")
+    logger.info('get_wallets command')
 
     """
     Возвращает кошельки
@@ -43,11 +45,11 @@ async def get_wallets(message: typing.Union[types.CallbackQuery, types.Message])
         await message.message.edit_text('Ваши кошельки', reply_markup=group_btn_s)
     elif isinstance(message, types.Message):
         # types.Message
-        await message.answer("Ваш кошельки", reply_markup=group_btn_s)
+        await message.answer('Ваш кошельки', reply_markup=group_btn_s)
 
 
 async def get_wallet_commands(callback_query: types.CallbackQuery):
-    logger.info("get_wallet_commands command")
+    logger.info('get_wallet_commands command')
 
     group_btn_s = InlineKeyboardMarkup(row_width=2)
     btn_s = []
@@ -67,7 +69,7 @@ async def get_wallet_commands(callback_query: types.CallbackQuery):
 
 
 async def get_tokens(callback_query: types.CallbackQuery = None):
-    logger.info("get_tokens command")
+    logger.info('get_tokens command')
 
     group_btn_s = InlineKeyboardMarkup(row_width=2)
     btn_s = []
@@ -86,8 +88,23 @@ async def get_tokens(callback_query: types.CallbackQuery = None):
     await callback_query.message.edit_text(text='Какой ТОКЕН:', reply_markup=group_btn_s)
 
 
+async def get_receive(callback_query: types.CallbackQuery):
+    logger.info('get_receive command')
+
+    address = 'test'
+    await callback_query.message.answer('Your qr code with wallet address')
+    await bot.send_photo(callback_query.message.chat.id, (await get_qr_code(address)))
+    await delete_qr_code()
+    # qr_code = pq.create('Rustam')
+    # qr_code.png('code.png', scale=6)
+    #
+    # with open('code.png', 'rb') as photo:
+    #     await bot.send_photo(callback_query.message.chat.id, photo)
+    # await callback_query.message.answer('Your qr code with wallet address')
+
+
 async def get_balance(callback_query: types.CallbackQuery):
-    logger.info("get_balance command")
+    logger.info('get_balance command')
 
     _, network, token = is_valid(data=callback_query.data)
     balance: typing.Dict = await Client.get_balance(
@@ -110,6 +127,7 @@ def register_handlers_client(dp: Dispatcher):
 
     dp.register_callback_query_handler(get_wallet_commands, lambda x: x.data[:7] == 'wallet_' and x.data[7:] in WALLETS)
     dp.register_callback_query_handler(get_tokens, lambda x: x.data[:13] == 'type_balance_' and x.data[13:] in WALLETS)
+    dp.register_callback_query_handler(get_receive, lambda x: x.data[:13] == 'type_receive_' and x.data[13:] in WALLETS)
     dp.register_callback_query_handler(get_balance, lambda x: x.data[:8] == "balance_")
 
 
