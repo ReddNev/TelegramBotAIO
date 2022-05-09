@@ -3,7 +3,6 @@ import typing
 from aiogram import types, Dispatcher
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-
 from create_bot import bot
 from database.database import get_user_by_id, insert_new_user, get_addres_by_id
 
