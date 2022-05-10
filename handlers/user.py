@@ -5,7 +5,7 @@ from aiogram import types, Dispatcher
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from create_bot import bot, dp
-from database.database import get_user_by_id, insert_new_user, get_addres_by_id
+from database.database import get_user_by_id, insert_new_user, get_address_by_id
 
 from services.client import Client
 from config import WALLETS, WALLETS_COMMAND, logger
@@ -111,7 +111,7 @@ async def get_balance(callback_query: types.CallbackQuery):
         network=network,
         token=token,
         # Create table 'wallet_model'
-        address=get_addres_by_id(callback_query.message.from_user.id)
+        address=get_address_by_id(callback_query.message.from_user.id)
     )
     await callback_query.answer(
         f"Ваш баланс: {balance.get('balance')} {network.upper()} {token.upper()}",

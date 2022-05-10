@@ -1,6 +1,7 @@
 import pyqrcode as pq
-from config import QR_CODE_PATH
 import aiofiles
+import asyncio
+from config import QR_CODE_PATH
 
 
 async def get_qr_code(address: str):
@@ -18,4 +19,7 @@ async def get_qr_code(address: str):
 
 
 async def delete_qr_code():
-    pass
+    async with aiofiles.open(QR_CODE_PATH, 'w') as file:
+        code = file.truncate()
+    return code
+
