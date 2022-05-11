@@ -1,6 +1,6 @@
 import pyqrcode as pq
+import os
 import aiofiles
-import asyncio
 from config import QR_CODE_PATH
 
 
@@ -19,7 +19,14 @@ async def get_qr_code(address: str):
 
 
 async def delete_qr_code():
-    async with aiofiles.open(QR_CODE_PATH, 'w') as file:
-        code = file.truncate()
-    return code
+    try:
+        path = os.path.join(os.path.abspath(os.path.dirname(__file__)), QR_CODE_PATH)
+        os.remove(path)
+    except OSError as e:
+        print(e)
+    else:
+        print("File is deleted successfully")
+
+
+
 
