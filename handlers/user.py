@@ -1,10 +1,9 @@
 import typing
-import pyqrcode as pq
 
 from aiogram import types, Dispatcher
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from create_bot import bot, dp
+from create_bot import bot
 from database.database import get_user_by_id, insert_new_user, get_address_by_id
 
 from services.client import Client
@@ -95,12 +94,6 @@ async def get_receive(callback_query: types.CallbackQuery):
     await callback_query.message.answer('Your qr code with wallet address')
     await bot.send_photo(callback_query.message.chat.id, (await get_qr_code(address)))
     await delete_qr_code()
-    # qr_code = pq.create('Rustam')
-    # qr_code.png('code.png', scale=6)
-    #
-    # with open('code.png', 'rb') as photo:
-    #     await bot.send_photo(callback_query.message.chat.id, photo)
-    # await callback_query.message.answer('Your qr code with wallet address')
 
 
 async def get_balance(callback_query: types.CallbackQuery):
